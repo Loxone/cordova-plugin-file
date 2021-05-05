@@ -192,7 +192,7 @@ NSString* const kCDVFilesystemURLPrefix = @"cdvfile";
 
 @implementation CDVFile
 
-@synthesize rootDocsPath, appDocsPath, appLibraryPath, appTempPath, userHasAllowed, fileSystems=fileSystems_;
+@synthesize settings, rootDocsPath, appDocsPath, appGroupDocsPath, appLibraryPath, appTempPath, userHasAllowed, fileSystems=fileSystems_;
 
 - (void)registerFilesystem:(NSObject<CDVFileSystem> *)fs {
     __weak CDVFile* weakSelf = self;
@@ -310,6 +310,8 @@ NSString* const kCDVFilesystemURLPrefix = @"cdvfile";
 
     fileSystems_ = [[NSMutableArray alloc] initWithCapacity:3];
 
+    self.settings = self.commandDelegate.settings;
+    
     // Get the Library directory path
     NSArray* paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
     self.appLibraryPath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"files"];
@@ -320,7 +322,18 @@ NSString* const kCDVFilesystemURLPrefix = @"cdvfile";
     // Get the Documents directory path
     paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     self.rootDocsPath = [paths objectAtIndex:0];
+    NSString* appGroup = [self.settings objectForKey:@"ios-applicatio-group"];
+    if (appGroup) {
+        self.appGroupDocsPath = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier: appGroup].path;
+        NSArray* currentDocFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[NSURL fileURLWithPath:self.rootDocsPath] includingPropertiesForKeys:[NSArray arrayWithObject:NSURLNameKey] options:NSDirectoryEnumerationSkipsHiddenFiles error:nil];
+        NSError* error;
+        for (NSURL* fileUrl in currentDocFiles) {
+            [[NSFileManager defaultManager] moveItemAtPath:fileUrl.path toPath:[self.appGroupDocsPath stringByAppendingPathComponent:fileUrl.lastPathComponent] error:&error];
+        }
+        self.rootDocsPath = self.appGroupDocsPath;
+    }
     self.appDocsPath = [self.rootDocsPath stringByAppendingPathComponent:@"files"];
+    
 
 
     NSString *location = nil;

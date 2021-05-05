@@ -309,6 +309,14 @@ unable to access their previously-stored files.
 If your application is new, or has never previously stored files in the
 persistent filesystem, then the `Library` setting is generally recommended.
 
+### iOS Application Group Sharing
+
+This fork makes all files in the documents directory available for the given application group defined in the `config.xml`
+>**Note**: All existing files will be copied to the shared application group folder on plugin initialization
+```
+<preference name="ios-applicatio-group" value="YOUR_APP_GROUP" />
+```
+
 ## Browser Quirks
 
 ### Common quirks and remarks
