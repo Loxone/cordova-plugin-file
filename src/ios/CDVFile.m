@@ -322,7 +322,7 @@ NSString* const kCDVFilesystemURLPrefix = @"cdvfile";
     // Get the Documents directory path
     paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     self.rootDocsPath = [paths objectAtIndex:0];
-    NSString* appGroup = [self.settings objectForKey:@"ios-applicatio-group"];
+    NSString* appGroup = [self.settings objectForKey:@"ios-application-group"];
     if (appGroup) {
         self.appGroupDocsPath = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier: appGroup].path;
         NSArray* currentDocFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[NSURL fileURLWithPath:self.rootDocsPath] includingPropertiesForKeys:[NSArray arrayWithObject:NSURLNameKey] options:NSDirectoryEnumerationSkipsHiddenFiles error:nil];

@@ -314,7 +314,7 @@ persistent filesystem, then the `Library` setting is generally recommended.
 This fork makes all files in the documents directory available for the given application group defined in the `config.xml`
 >**Note**: All existing files will be copied to the shared application group folder on plugin initialization
 ```
-<preference name="ios-applicatio-group" value="YOUR_APP_GROUP" />
+<preference name="ios-application-group" value="YOUR_APP_GROUP" />
 ```
 
 ## Browser Quirks
